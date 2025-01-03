@@ -119,6 +119,8 @@ static inline void print_help(const char *file) {
   printf("      --dump-footprints=NAME dump memory access footprints to NAME\n");
   printf("      --as-footprints        load the image as memory access footprints\n");
   printf("      --dump-linearized=NAME dump the linearized footprints to NAME\n");
+
+  printf("      --enable-cache-monitor enable cache monitor\n");
   printf("  -h, --help                 print program help info\n");
   printf("\n");
 }
@@ -159,6 +161,7 @@ inline EmuArgs parse_args(int argc, const char *argv[]) {
     { "iotrace-name",      1, NULL,  0  },
     { "dramsim3-ini",      1, NULL,  0  },
     { "overwrite-auto",    1, NULL,  0  },
+    { "enable-cache-monitor", 0, NULL, 0 },
     { "seed",              1, NULL, 's' },
     { "max-cycles",        1, NULL, 'C' },
     { "fork-interval",     1, NULL, 'X' },
@@ -257,6 +260,7 @@ inline EmuArgs parse_args(int argc, const char *argv[]) {
             break;
 #endif
           case 26: args.overwrite_nbytes_autoset = true; continue;
+          case 27: args.enable_cache_monitor = true; continue;
         }
         // fall through
       default: print_help(argv[0]); exit(0);
@@ -489,6 +493,11 @@ Emulator::Emulator(int argc, const char *argv[])
     coverage = Verilated::threadContextp()->coveragep();
   }
 #endif
+
+  // cache monitor
+  if (args.enable_cache_monitor){
+    cache_monitor = new CacheMonitor();
+  }
 }
 
 Emulator::~Emulator() {
@@ -570,6 +579,10 @@ Emulator::~Emulator() {
 
   if (enable_simjtag) {
     delete jtag;
+  }
+
+  if (args.enable_cache_monitor){
+    delete cache_monitor;
   }
 
   delete dut_ptr;
@@ -887,6 +900,18 @@ int Emulator::tick() {
 #ifdef ENABLE_IPC
   fclose(args.ipc_file);
 #endif
+
+  // for cache monitor
+  if (args.enable_cache_monitor){
+    for (int i = 0; i < NUM_CORES; i++) {
+      auto trap = difftest[i]->get_trap_event();
+
+      cache_monitor->collect_dcache_mshr_states(dut_ptr);
+      cache_monitor->update_dcache_mshr_stats();
+
+      cache_monitor->log_dcache_mshr_stats(trap->cycleCnt);
+    }
+  }
 
   if (args.enable_fork) {
     static bool have_initial_fork = false;

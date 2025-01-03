@@ -1,0 +1,31 @@
+// Performance Monitor for Cache
+
+#include "cache_monitor.h"
+
+CacheMonitor::CacheMonitor(){
+    printf("[INFO] Cache Monitor is enabled\n");
+    log_fp = fopen(dcache_mshr_log, "w");
+}
+
+CacheMonitor::~CacheMonitor(){
+    fclose(log_fp);
+}
+
+void CacheMonitor::collect_dcache_mshr_states(VSimTop *dut_ptr){
+    dcache_mshr_states[0] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_0__DOT__state;
+    dcache_mshr_states[1] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_1__DOT__state;
+    dcache_mshr_states[2] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_2__DOT__state;
+    dcache_mshr_states[3] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_3__DOT__state;
+    dcache_mshr_states[4] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_4__DOT__state;
+    dcache_mshr_states[5] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_5__DOT__state;
+    dcache_mshr_states[6] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_6__DOT__state;
+    dcache_mshr_states[7] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_7__DOT__state;
+    dcache_mshr_states[8] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_8__DOT__state;
+    dcache_mshr_states[9] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_9__DOT__state;
+    dcache_mshr_states[10] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_10__DOT__state;
+    dcache_mshr_states[11] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_11__DOT__state;
+    dcache_mshr_states[12] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_12__DOT__state;
+    dcache_mshr_states[13] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_13__DOT__state;
+    dcache_mshr_states[14] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_14__DOT__state;
+    dcache_mshr_states[15] = dut_ptr->rootp->SimTop__DOT__l_soc__DOT__core_with_l2__DOT__core__DOT__memBlock__DOT__inner_dcache__DOT__dcache__DOT__missQueue__DOT__entries_15__DOT__state;
+}

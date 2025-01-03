@@ -20,6 +20,7 @@
 #include "VSimTop.h"
 #include "VSimTop__Syms.h"
 #include "common.h"
+#include "cache_monitor.h"
 #include "dut.h"
 #include "lightsss.h"
 #include "snapshot.h"
@@ -81,11 +82,14 @@ struct EmuArgs {
   bool dump_coverage = false;
   bool image_as_footprints = false;
   bool overwrite_nbytes_autoset = false;
+
+  bool enable_cache_monitor = false;
 };
 
 class Emulator final : public DUT {
 private:
   VSimTop *dut_ptr;
+  CacheMonitor *cache_monitor = nullptr;
 #ifdef ENABLE_FST
   VerilatedFstC *tfp;
 #else
