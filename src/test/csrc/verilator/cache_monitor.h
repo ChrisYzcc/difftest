@@ -18,7 +18,7 @@ public:
     const uint32_t MSHR_STATE_MIXED = 2;
     const uint32_t MSHR_STATE_OTHER = 3;
 
-    const char *dcache_mshr_log = "./rpt/dcache_mshr.log";
+    char dcache_mshr_log[128];
 
     FILE *log_fp = nullptr;
 
@@ -46,7 +46,7 @@ public:
     }
 
     void conditional_log_dcache_mshr_stats(int cycle){
-        if (prefetch_num + mixed_num + other_num > 0){
+        if (cycle % 100 == 0){
             log_dcache_mshr_stats(cycle);
         }
     }
