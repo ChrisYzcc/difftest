@@ -65,6 +65,7 @@ struct EmuArgs {
   const char *ram_size = nullptr;
   const char *flash_bin = nullptr;
   const char *select_db = nullptr;
+  const char *db_path = nullptr;
   const char *trace_name = nullptr;
   const char *footprints_name = nullptr;
   const char *linearized_name = nullptr;

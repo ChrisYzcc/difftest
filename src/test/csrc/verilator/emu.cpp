@@ -97,6 +97,7 @@ static inline void print_help(const char *file) {
 #ifdef ENABLE_CHISEL_DB
   printf("      --dump-db              enable database dump\n");
   printf("      --dump-select-db       select database's table to dump\n");
+  printf("      --dump-db-path         specify the path of the database\n");
 #endif
   printf("  -F, --flash                the flash bin file for simulation\n");
   printf("      --sim-run-ahead        let a fork of simulator run ahead of commit for perf analysis\n");
@@ -162,6 +163,7 @@ inline EmuArgs parse_args(int argc, const char *argv[]) {
     { "dramsim3-ini",      1, NULL,  0  },
     { "overwrite-auto",    1, NULL,  0  },
     { "enable-cache-monitor", 0, NULL, 0 },
+    { "dump-db-path",      1, NULL,  0  },
     { "seed",              1, NULL, 's' },
     { "max-cycles",        1, NULL, 'C' },
     { "fork-interval",     1, NULL, 'X' },
@@ -212,6 +214,9 @@ inline EmuArgs parse_args(int argc, const char *argv[]) {
           case 12:
             args.dump_db = true;
             args.select_db = optarg;
+            continue;
+          case 28:
+            args.db_path = optarg;
             continue;
 #else
           case 11:
@@ -565,8 +570,19 @@ Emulator::~Emulator() {
 
 #ifdef ENABLE_CHISEL_DB
   if (args.dump_db) {
-    time_t now = time(NULL);
-    save_db(logdb_filename(now));
+    if (args.db_path != NULL) {
+      time_t t = time(NULL);
+      char buf_time[64];
+      strftime(buf_time, sizeof(buf_time), "%F@%T", localtime(&t));
+
+      char *buf = (char *)malloc(strlen(args.db_path) + strlen(buf_time) + 64);
+      sprintf(buf, "%s/%s.db", args.db_path, buf_time);
+      save_db(buf);
+      free(buf);
+    } else {
+      time_t now = time(NULL);
+      save_db(logdb_filename(now));
+    }
   }
 #endif
 
